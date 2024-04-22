@@ -15,11 +15,7 @@ In order to build this yourself, all you need to do is to clone the repository (
 ./build.sh
 ```
 
-There is also an optional compilation flag `-DBORDERLESS` which makes the application run in borderless fullscreen.
-To build with this flag, just append to the call of the build script:
-```shell
-./build.sh -DBORDERLESS
-```
+This will output two binaries: a windowed application and a borderless fullscreen version. 
 
 And that's all there is to it!
 
