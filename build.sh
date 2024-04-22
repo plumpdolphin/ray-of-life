@@ -16,7 +16,7 @@ inc='-Iinclude -Isrc/include'
 clear
 
 # Generate icon.h
-python tools/icon_gen.py rscs/icon.gif include/icon.h raylib.h 
+python tools/icon_gen.py -i rscs/icon.gif -o include/icon.h -r raylib.h 
 
 # Create binary path if it does not exist
 mkdir -p bin

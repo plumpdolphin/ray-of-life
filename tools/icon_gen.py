@@ -1,13 +1,22 @@
 #!/usr/bin/python
 
-import sys
+import argparse
 
 if __name__ == '__main__':
 
+    # Parse arguments
+    parser = argparse.ArgumentParser(description="Generates a C header file with icon file embedded.")
+    
+    parser.add_argument('-i', '--icon', type=str, help='Icon path', required=True)
+    parser.add_argument('-o', '--output', type=str, help='Output header path', required=True)
+    parser.add_argument('-r', '--raylib', type=str, help='Raylib header path', required=True)
+
+    args = parser.parse_args()
+
     # Pull paths from arguments
-    path_icon   = sys.argv[1]
-    path_header = sys.argv[2]
-    path_raylib = sys.argv[3]
+    path_icon   = args.icon
+    path_header = args.output
+    path_raylib = args.raylib
 
     # Get extension
     ext = path_icon.split('.')[-1]
