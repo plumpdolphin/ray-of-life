@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "raylib.h"
- 
+
+#include "icon.h" 
 #include "board.h"
 
 
@@ -11,7 +13,11 @@ main(void) {
     // Create window at default size
     InitWindow(1600, 800, "Ray of Life");
     SetTargetFPS(30);
-    
+
+    // Set icon
+    SetEmbeddedWindowIcon();
+
+
     // Capture current monitor
     int mIdx = GetCurrentMonitor();
 
@@ -42,12 +48,8 @@ main(void) {
     int rows    = windowHeight / CELL_SIZE;
     int columns = windowWidth  / CELL_SIZE;
 
-
-
     // Create board
     board_t board = board_new(rows, columns);
-
-
 
     // Set up auto-reset
     int frameCurrent = 0;
@@ -86,7 +88,6 @@ main(void) {
             DrawText("(c) PlumpDolphin", windowWidth - 136, windowHeight - 24, 16, frameCounterColor);
         EndDrawing();
     }
-
 
 
     // Properly close out game
