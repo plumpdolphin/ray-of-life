@@ -140,6 +140,8 @@ board_update(board_t *b) {
 
     // Set alpha from cell values
     for (int i = 0; i < b->length; i++)
+        // Each Color is 4-bytes wide. So we access the alpha channel every 4 bytes with a 3 byte offset.
+        // The cell's alpha is set to (true = 255) or (false = 0)
         bytes[(i << 2) + 3] = (unsigned char)(256 - b->cells[i]);
 
 
