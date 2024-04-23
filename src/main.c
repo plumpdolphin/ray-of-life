@@ -17,7 +17,6 @@ main(void) {
     // Set icon
     SetEmbeddedWindowIcon();
 
-
     // Capture current monitor
     int mIdx = GetCurrentMonitor();
 
@@ -55,7 +54,7 @@ main(void) {
     int frameCurrent = 0;
     int frameReset   = 1028;
 
-    char  frameCounter[64];
+    char  frameCounter[32];
     Color frameCounterColor = (Color){0xFF, 0xFF, 0xFF, 0x20};
 
 
@@ -68,7 +67,7 @@ main(void) {
             board_seed(&board);
 
         // Update frame counter
-        snprintf(frameCounter, 64, "Frame: %i", frameCurrent);
+        snprintf(frameCounter, 32, "Frame: %i", frameCurrent);
 
         // Update cells
         board_update(&board);
