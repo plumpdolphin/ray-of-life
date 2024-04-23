@@ -28,8 +28,9 @@
 
 // Board structure
 typedef struct {
-    int rows, cols;
+    int rows, cols, length;
     bool *cells, *buffer;
+    Texture2D texture;
 } board_t;
 
 
@@ -44,7 +45,6 @@ void board_seed(board_t *b);
 void board_update(board_t *b);
 void board_draw(board_t *b, Color c);
 
-void cell_draw(int x, int y, Color c);
 int cell_neighbor(board_t *b, int x, int y);
 
 
@@ -58,8 +58,14 @@ board_new(int rows, int columns) {
     board_t b;
     b.rows = rows;
     b.cols = columns;
-    b.cells  = (bool*)calloc(rows * columns, sizeof(bool));
-    b.buffer = (bool*)calloc(rows * columns, sizeof(bool));
+    b.length = rows * columns;
+    b.cells  = (bool*)calloc(b.length, sizeof(bool));
+    b.buffer = (bool*)calloc(b.length, sizeof(bool));
+
+    // Create placeholder texture
+    Image image = GenImageColor(columns, rows, WHITE);
+    b.texture = LoadTextureFromImage(image);
+    UnloadImage(image);
 
     // Setup board state
     board_seed(&b);
@@ -73,6 +79,9 @@ board_free(board_t *b) {
     // Free up board's arrays
     free(b->cells);
     free(b->buffer);
+
+    // Free texture
+    UnloadTexture(b->texture);
 }
 
 void 
@@ -100,7 +109,7 @@ board_seed(board_t *b) {
 // Interaction functions
 void
 board_update(board_t *b) {
-    // Run checks
+    // Run rule checks
     for (int row = 0; row < b->rows; row++) {
         for (int col = 0; col < b->cols; col++) {
             // Get neighbor count
@@ -118,18 +127,30 @@ board_update(board_t *b) {
         }
     }
 
+
     // Copy values from buffer into cells
-    for (int i = 0; i < b->rows * b->cols; i++)
+    for (int i = 0; i < b->length; i++)
         b->cells[i] = b->buffer[i];
+
+
+    // Update texture for rendering
+    Image image = GenImageColor(b->cols, b->rows, WHITE);
+    unsigned char *bytes = (unsigned char*)image.data;
+
+
+    // Set alpha from cell values
+    for (int i = 0; i < b->length; i++)
+        bytes[(i << 2) + 3] = (unsigned char)(256 - b->cells[i]);
+
+
+    // Update texture and cleanup
+    UpdateTexture(b->texture, image.data);
+    UnloadImage(image);
 }
 
 void 
 board_draw(board_t *b, Color c) {
-    for (int row = 0; row < b->rows; row++)
-        for (int col = 0; col < b->cols; col++)
-            // If cell is true, draw cell
-            if ( b->cells[BIDX(col, row)] )
-                cell_draw(col, row, c);
+    DrawTextureEx(b->texture, (Vector2){0, 0}, 0, CELL_SIZE, c);
 }
 
 
@@ -137,21 +158,6 @@ board_draw(board_t *b, Color c) {
 
 
 // Cell functions
-void
-cell_draw(int x, int y, Color c) {
-#if CELL_SIZE == 1
-    DrawPixel(x, y, c);
-#else
-    DrawRectangle(
-        x * CELL_SIZE,
-        y * CELL_SIZE,
-        CELL_SIZE,
-        CELL_SIZE,
-        c
-    );
-#endif
-}
-
 int
 cell_neighbor(board_t *b, int x, int y) {
     // This runs through a window surrounding the cell position
