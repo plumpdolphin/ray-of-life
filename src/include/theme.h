@@ -15,7 +15,7 @@ static theme_t g_themes[] = {
     (theme_t) {
         .bg  = BLACK,
         .fg  = RAYWHITE,
-        .txt = (Color){ 255, 255, 255, 32 },
+        .txt = (Color){ 64,  64,  64,  255 },
     },
     
     // Github Dark
