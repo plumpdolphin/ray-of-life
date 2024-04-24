@@ -62,20 +62,18 @@ main(void) {
     // Set up UI
     ui_t ui = ui_new(windowWidth, windowHeight);
 
+
+    bool isPlaying = true;
+
     // Main loop
     while (!WindowShouldClose())
     {
-        // Reset board every N frames
-        frameCurrent = (frameCurrent + 1) % frameReset;
-        if (!frameCurrent)
-            board_seed(&board);
-
-        // Update cells
-        board_update(&board);
-
+        // Get delta frame time
+        float dt = GetFrameTime();
 
         // Handle input and switch themes
         switch(GetKeyPressed()) {
+            // Set theme
             case KEY_ONE:
                 theme = g_themes[0];
                 break;
@@ -98,13 +96,37 @@ main(void) {
                 theme = g_themes[6];
                 break;
 
+            // Toggle UI
             case KEY_F1:
-                ui_toggle_visible(&ui); // Toggle UI
+                ui_toggle_visible(&ui); 
                 break;
+            
+            // Toggle debug
             case KEY_F3:
-                ui_toggle_debug(&ui); // Toggle debug
+                ui_toggle_debug(&ui); 
+                break;
+
+            // Play/Pause
+            case KEY_SPACE:
+                isPlaying ^= 1;
+                ui_toggle_play(&ui);
                 break;
         }
+
+
+
+        if (isPlaying) {
+            // Reset board every N frames
+            frameCurrent = (frameCurrent + 1) % frameReset;
+            if (!frameCurrent)
+                board_seed(&board);
+
+            // Update cells
+            board_update(&board);
+        }
+
+        // Update UI
+        ui_update(&ui, dt);
 
 
         // Render
