@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 
+#include "ui.h"
 #include "icon.h" 
 #include "board.h"
 #include "theme.h"
@@ -52,13 +53,14 @@ main(void) {
     board_t board = board_new(rows, columns);
 
     // Set default theme
-    theme_t theme = g_themes[0];
+    theme_t theme = g_themes[4];
 
     // Set up auto-reset
     int frameCurrent = 0;
     int frameReset   = 1028;
-    char frameCounter[32];
 
+    // Set up UI
+    ui_t ui = ui_new(windowWidth, windowHeight);
 
     // Main loop
     while (!WindowShouldClose())
@@ -67,9 +69,6 @@ main(void) {
         frameCurrent = (frameCurrent + 1) % frameReset;
         if (!frameCurrent)
             board_seed(&board);
-
-        // Update frame counter
-        snprintf(frameCounter, 32, "Frame: %i", frameCurrent);
 
         // Update cells
         board_update(&board);
@@ -98,6 +97,13 @@ main(void) {
             case KEY_SEVEN:
                 theme = g_themes[6];
                 break;
+
+            case KEY_F1:
+                ui_toggle_visible(&ui); // Toggle UI
+                break;
+            case KEY_F3:
+                ui_toggle_debug(&ui); // Toggle debug
+                break;
         }
 
 
@@ -108,12 +114,8 @@ main(void) {
             // Draw board cells
             board_draw(&board, theme.fg);
 
-            // Draw Debug GUI
-            DrawText(frameCounter, 8, 8, 24, theme.txt);
-            // DrawFPS(8, 8);
-
-            // Signature :D
-            DrawText("(c) PlumpDolphin", windowWidth - 136, windowHeight - 24, 16, theme.txt);
+            // Draw UI
+            ui_draw(&ui, frameCurrent, theme.txt);
         EndDrawing();
     }
 
