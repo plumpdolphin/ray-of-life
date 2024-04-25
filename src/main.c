@@ -100,11 +100,6 @@ main(void) {
             case KEY_F1:
                 ui_toggle_visible(&ui); 
                 break;
-            
-            // Toggle debug
-            case KEY_F3:
-                ui_toggle_debug(&ui); 
-                break;
 
             // Play/Pause
             case KEY_SPACE:
