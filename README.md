@@ -1,8 +1,7 @@
 <div align="center">
-    <img src="docs/demo.png" width="75%">
+    <img src="docs/logo.svg">
     <h1>Ray of Life</h1>
 </div>
-
 
 This is a basic example program, built with Raylib, that plays a randomized Conway's Game of Life! No fancy bells or whistles, just mesmerizing, procedurally-generated visuals to view for hours on end.
 
@@ -23,6 +22,15 @@ And that's all there is to it!
 The rendering process is currently poorly optimized and may cause trouble on laptops and low-end graphics cards. This is because all cells are rendered with separate draw calls, leading to exponentially higher performance hit with increased resolution.
 
 This can be fixed by implementing a shader to render the cell data instead of the CPU passing draw calls one-at-a-time. Similarly, cell rule computation could be implemented as a compute shader for even more performance improvements!
+
+
+## Screenshot:
+
+<div align="center">
+    <img src="docs/demo.png" width="50%">
+</div>
+
+---
 
 <div align="center">
     <h3>Hope you enjoy!</h1>
