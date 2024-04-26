@@ -11,7 +11,13 @@
 
 
 
-// UI Structure
+// Animation structure
+typedef struct {
+    int state;
+    float time, delay;
+} animation_t;
+
+// UI structure
 typedef struct {
     // Window size
     int width, height;
@@ -25,8 +31,7 @@ typedef struct {
     bool debug; 
 
     // Play state
-    bool playing;
-    float stateChange, stateChangeDelay;
+    animation_t play;
 } ui_t;
 
 
@@ -62,9 +67,11 @@ ui_new(int width, int height) {
     ui.visible = true;
 
     // Default to play state
-    ui.playing = true;
-    ui.stateChange = 1;
-    ui.stateChangeDelay = 1;
+    ui.play = (animation_t) {
+        .state = true,
+        .time  = 1,
+        .delay = 1
+    };
 
     return ui;
 }
@@ -87,12 +94,12 @@ ui_draw(ui_t *ui, int frame, Color c) {
     // Calculate fade for state icon
     Color colorState = (Color) {
         c.r, c.g, c.b,
-        c.a * (1 - (ui->stateChange > 1 ? 1 : ui->stateChange * ui->stateChange))
+        c.a * (1 - (ui->play.time > 1 ? 1 : ui->play.time * ui->play.time))
     };
 
 
     // Draw state icon
-    if (ui->playing) {
+    if (ui->play.state) {
         // Draw play icon
         DrawTriangle(
             (Vector2) { (ui->width >> 1) - sH, margin },
@@ -125,7 +132,7 @@ ui_draw(ui_t *ui, int frame, Color c) {
 
 void
 ui_update(ui_t *ui, float dt) {
-    ui->stateChange += dt * ui->stateChangeDelay;
+    ui->play.time += dt * ui->play.delay;
 }
 
 
@@ -134,10 +141,10 @@ ui_update(ui_t *ui, float dt) {
 void
 ui_toggle_play(ui_t *ui) {
     // Flip playing state
-    ui->playing ^= 1;
+    ui->play.state ^= 1;
 
     // Reset state change timer
-    ui->stateChange = 0;
+    ui->play.time = 0;
 }
 
 void
