@@ -141,6 +141,10 @@ board_reset(board_t *b) {
     for (int row = 0; row < b->rows; row++)
         for (int col = 0; col < b->cols; col++)
             b->cells[BIDX(col, row)] = false;
+
+    // Reset frame number
+    b->time  = 0;
+    b->frame = 0;
 }
 
 
