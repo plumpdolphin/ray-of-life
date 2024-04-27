@@ -125,6 +125,8 @@ ui_draw(ui_t *ui, int frame, Color c) {
     char frameCounter[32];
     snprintf(frameCounter, 32, "Frame: %i", frame);
     DrawText(frameCounter, 8, 8, ui->sizeFont, c);
+
+    DrawFPS(8, 32);
     
     // Signature :D
     DrawText("(c) PlumpDolphin", ui->width - 136, ui->height - margin, 16, c);

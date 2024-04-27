@@ -14,7 +14,6 @@ int
 main(void) {
     // Create window at default size
     InitWindow(1600, 800, "Ray of Life");
-    SetTargetFPS(30);
 
     // Set icon
     SetEmbeddedWindowIcon();
@@ -55,15 +54,8 @@ main(void) {
     // Set default theme
     theme_t theme = g_themes[4];
 
-    // Set up auto-reset
-    int frameCurrent = 0;
-    int frameReset   = 1028;
-
     // Set up UI
     ui_t ui = ui_new(windowWidth, windowHeight);
-
-
-    bool isPlaying = true;
 
     // Main loop
     while (!WindowShouldClose())
@@ -103,22 +95,13 @@ main(void) {
 
             // Play/Pause
             case KEY_SPACE:
-                isPlaying ^= 1;
+                board.playing ^= 1;
                 ui_toggle_play(&ui);
                 break;
         }
 
-
-
-        if (isPlaying) {
-            // Reset board every N frames
-            frameCurrent = (frameCurrent + 1) % frameReset;
-            if (!frameCurrent)
-                board_seed(&board);
-
-            // Update cells
-            board_update(&board);
-        }
+        // Update cells
+        board_update(&board, dt);
 
         // Update UI
         ui_update(&ui, dt);
@@ -132,7 +115,7 @@ main(void) {
             board_draw(&board, theme.fg);
 
             // Draw UI
-            ui_draw(&ui, frameCurrent, theme.txt);
+            ui_draw(&ui, board.frame, theme.txt);
         EndDrawing();
     }
 
